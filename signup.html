@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <div class="form">
+        <h2>Sign up</h2>
+        <form action="/register" method="post" id="signupForm">
+            <fieldset>
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
+                
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required><br>
+                
+                <label for="password">Password:</label><br>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-password" data-target="password">Show</button>
+                </div>
+                
+                <label for="confirm_password">Confirm Password:</label><br>
+                <div class="password-container">
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" required>
+                    <button type="button" class="toggle-password" data-target="confirm_password">Show</button>
+                </div>
+                
+                <div id="error-message" style="color: red; font-size: 0.9rem; display: none;"></div>
+                <button type="submit">Sign Up</button> <button type="submit"><a href="login.html">Login</a></button>
+            </fieldset>
+        </form>
+    </div>
+
+    <script src="./script/signup.js"></script>
+</body>
+</html>

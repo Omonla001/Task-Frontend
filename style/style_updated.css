@@ -1,0 +1,144 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: #fff;
+}
+
+header {
+    background: #370db4;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 2rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 0;
+    gap: 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #ff4500;
+}
+
+main {
+    padding: 20px;
+    background: #fff;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    color: #333;
+}
+
+main h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #370db4;
+    margin-bottom: 20px;
+    animation: slideIn 1s ease-out;
+}
+
+main p {
+    text-align: center;
+    line-height: 1.6;
+    font-size: 1rem;
+    animation: fadeIn 1.5s ease-in;
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    margin: 20px auto;
+    display: block;
+    text-align: center;
+    width: fit-content;
+    animation: bounce 2s infinite; 
+}
+
+.button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 86, 179, 0.4);
+}
+
+footer  {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: #ddf007;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+    bottom: 0;
+    width: auto;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Animation Keyframes */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}

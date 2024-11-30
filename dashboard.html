@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Dashboard</title>
+  <link rel="stylesheet" href="./style/task.css">
+</head>
+<body>
+  <div class="task-dashboard">
+    <h1>Task Manager Dashboard</h1>
+
+    <!-- Task Form -->
+    <div class="task-form">
+      <h2>Create a Task</h2>
+      <input type="text" id="task-title" placeholder="Task Title" />
+      <textarea id="task-desc" placeholder="Task Description"></textarea>
+      <input type="date" id="task-deadline" />
+      <select id="task-priority">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <button id="add-task-btn">Add Task</button>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="filters-search">
+      <input type="text" id="search-input" placeholder="Search by title" />
+      <button id="search-btn">Search</button>
+      <div class="filters">
+        <button data-filter="all" class="filter-btn active">All</button>
+        <button data-filter="completed" class="filter-btn">Completed</button>
+        <button data-filter="pending" class="filter-btn">Pending</button>
+        <button data-filter="high" class="filter-btn">High Priority</button>
+        <button data-filter="medium" class="filter-btn">Medium Priority</button>
+        <button data-filter="low" class="filter-btn">Low Priority</button>
+        <button data-filter="overdue" class="filter-btn">Overdue</button>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <ul id="task-list"></ul>
+  </div>
+  <script src="./script/script.js"></script>
+</body>
+</html>
