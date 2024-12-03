@@ -5,26 +5,40 @@ const form = document.querySelector('form');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
+    function showLoader() {
+      document.getElementById('loader').style.display = 'flex';
+    }
+    
+    function hideLoader() {
+      document.getElementById('loader').style.display = 'none';
+    }
+    
+
     try {
+      showLoader();
       const response = await fetch('http://localhost:8000/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
+      
       const result = await response.json();
       if (response.ok) {
         alert(result.message || 'Login successful!');
-        // Handle successful login, e.g., store token or redirect
-        const isAuthenticated = true;
-        if (isAuthenticated) {
-            // Redirect to Dashboard
-            window.location.href = 'dashboard.html';
-        }
+        
+        // Save token to session storage for later use
+        sessionStorage.setItem('userToken', result.token);
+        sessionStorage.setItem('username', result.user.name);
+  
+        // Redirect to dashboard
+        window.location.href = 'welcome.html';
       } else {
-        alert(result.error || 'Login failed.');
+        document.getElementById('error-message').textContent = result.error || 'Login failed.';
+        document.getElementById('error-message').style.display = 'block';
       }
     } catch (error) {
       console.error('Error:', error);
+    }finally {
+      hideLoader();
     }
 });

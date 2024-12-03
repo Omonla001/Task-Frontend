@@ -32,11 +32,21 @@ document.getElementById('signupForm').addEventListener('submit', event => {
 const form = document.getElementById('signupForm');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
 
+    function showLoader() {
+      document.getElementById('loader').style.display = 'flex';
+    }
+    
+    function hideLoader() {
+      document.getElementById('loader').style.display = 'none';
+    }
+    
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
     try {
+      showLoader();
       const response = await fetch('http://localhost:8000/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,5 +63,7 @@ const form = document.getElementById('signupForm');
       }
     } catch (error) {
       console.error('Error:', error);
+    }finally {
+      hideLoader();
     }
   });

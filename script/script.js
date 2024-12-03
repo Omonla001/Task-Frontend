@@ -1,4 +1,4 @@
-// File: script.js
+
 
 // Elements
 const taskTitle = document.getElementById('task-title');
@@ -14,8 +14,38 @@ const searchBtn = document.getElementById('search-btn');
 // In-memory tasks array
 let tasks = [];
 
+//  Base URL for API requests
+const API_BASE = 'http://localhost:8000/tasks'; 
+
+// Check if userToken exists in sessionStorage
+const token = sessionStorage.getItem('userToken');
+
+if (!token) {
+  // Redirect to login page if no token is found
+  alert('You must log in to access the dashboard.');
+  window.location.href = 'login.html';
+}
+
+// Utility function for authenticated requests
+async function fetchWithAuth(url, option = {}) {
+  const headers = option.headers || {};
+  headers['Authorization'] = `Bearer ${token}`;
+  headers['Content-Type'] = 'application/json';
+  option.headers = headers;
+ 
+  const response = await fetch(url, option);
+
+  if (response.status === 401) {
+    alert('Session expired. Please log in again.');
+    sessionStorage.removeItem('userToken'); // Clear the token
+    window.location.href = 'login.html'; // Redirect to login page
+    return;
+  }
+  return response;
+}
+
 // Render tasks
-function renderTasks(filter = 'all', searchQuery = '') {
+async function renderTasks(filter = 'all', searchQuery = '') {
   taskList.innerHTML = '';
   
   // Filter and search tasks
@@ -43,15 +73,37 @@ function renderTasks(filter = 'all', searchQuery = '') {
       <p>${task.description}</p>
       <p>Deadline: ${task.deadline}</p>
       <p>Priority: ${task.priority}</p>
-      <button onclick="toggleComplete(${task.id})">${task.completed ? 'Mark as Pending' : 'Mark as Completed'}</button>
-      <button onclick="deleteTask(${task.id})">Delete</button>
+      <button onclick="toggleComplete(${task._id})">${task.completed ? 'Mark as Pending' : 'Mark as Completed'}</button>
+      <button onclick="deleteTask(${task._id})">Delete</button>
     `;
     taskList.appendChild(li);
   });
 }
 
-// Add task
-addTaskBtn.addEventListener('click', () => {
+// Load tasks on page load
+window.onload = () => {
+  loadTasks(); // Ensure tasks are loaded when the page is ready
+};
+
+// Fetch tasks from the backend
+async function loadTasks() {
+  try {
+    const response = await fetchWithAuth(`${API_BASE}/userTask`);
+    const result = await response.json();
+    
+    if (response.ok) {
+      tasks = result.tasks;
+      renderTasks();
+    } else {
+      alert(result.message || 'Failed to fetch tasks.');
+    }
+  } catch (err) {
+    console.error('Error fetching tasks:', err);
+  }
+}
+
+// Add a new task
+addTaskBtn.addEventListener('click', async () => {
   const title = taskTitle.value.trim();
   const description = taskDesc.value.trim();
   const deadline = taskDeadline.value;
@@ -62,35 +114,88 @@ addTaskBtn.addEventListener('click', () => {
     return;
   }
 
-  tasks.push({
-    id: Date.now(),
-    title,
-    description,
-    deadline,
-    priority,
-    completed: false
-  });
+  try {
+    const response = await fetchWithAuth(`${API_BASE}/createTask`, {
+      method: 'POST',
+      body: JSON.stringify({
+        title,
+        description,
+        deadline,
+        priority,
+      }),
+    });
+    const result = await response.json();
 
-  taskTitle.value = '';
-  taskDesc.value = '';
-  taskDeadline.value = '';
-  taskPriority.value = 'medium';
-
-  renderTasks();
+    if (response.ok) {
+      alert(result.message || 'Task created successfully!');
+      loadTasks(); // Reload tasks from the backend
+    } else {
+      alert(result.error || 'Failed to create task.');
+    }
+  } catch (err) {
+    console.error('Error creating task:', err);
+  }
 });
 
 // Toggle task completion
-function toggleComplete(id) {
-  tasks = tasks.map(task =>
-    task.id === id ? { ...task, completed: !task.completed } : task
-  );
-  renderTasks();
+async function toggleComplete(id) {
+  if (!id){
+    console.error('Task ID is missing');
+    return;
+  }
+
+  console.log('Toggling task with ID:', id);
+  try {
+    const task = tasks.find(t => t._id === id);
+    if (!task){
+      console.error('Task not found');
+      return;
+    }
+      
+    const response = await fetchWithAuth(`${API_BASE}/userTask/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ completed: !task.completed}),
+    });
+    const result = await response.json();
+    
+    if (!response.ok) {
+      const error = await response.json();
+      alert(error.message || 'An error occurred while processing the request.');
+      return;
+  }
+  
+
+    if (response.ok) {
+      alert(result.message || 'Task updated successfully!');
+      loadTasks(); // Reload tasks from the backend
+    } else {
+      alert(result.message || 'Failed to update task.');
+    }
+  } catch (err) {
+    console.error('Error updating task:', err);
+  }
 }
 
-// Delete task
-function deleteTask(id) {
-  tasks = tasks.filter(task => task.id !== id);
-  renderTasks();
+// Delete a task
+async function deleteTask(id) {
+  if (!id) {
+    console.error('Task ID is missing');
+    return;
+  }
+  console.log('Deleting task with ID:', id);
+  try {
+    const response = await fetchWithAuth(`${API_BASE}/userTask/${id}`, { method: 'DELETE' });
+    const result = await response.json();
+    
+    if (response.ok) {
+      alert(result.message || 'Task deleted successfully!');
+      loadTasks(); // Reload tasks from the backend
+    } else {
+      alert(result.message || 'Failed to delete task.');
+    }
+  } catch (err) {
+    console.error('Error deleting task:', err);
+  }
 }
 
 // Filter tasks
@@ -107,5 +212,3 @@ searchBtn.addEventListener('click', () => {
   renderTasks('all', searchInput.value.trim());
 });
 
-// Initial render
-renderTasks();

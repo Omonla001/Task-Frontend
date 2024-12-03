@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Dashboard</title>
+  <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+  <div class="welcome-dashboard">
+    <h1 id="welcome-message">Welcome, User!</h1>
+    <p>We're glad to have you here. You can manage your tasks effortlessly with our platform.</p>
+    <button id="task-dashboard-btn">Go to Task Dashboard</button>
+    <button id="logout-btn">Logout</button>
+  </div>
+  <div id="loader" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  
+  <script>
+    // Retrieve user's name from sessionStorage
+    const userName = sessionStorage.getItem('username');
+    const welcomeMessage = document.getElementById('welcome-message');
+    
+    function showLoader() {
+        document.getElementById('loader').style.display = 'flex';
+      }
+      
+      function hideLoader() {
+        document.getElementById('loader').style.display = 'none';
+      }
+      
+
+    // Personalize the welcome message
+    if (userName) {
+      welcomeMessage.textContent = `Welcome, ${userName}!`;
+    }
+
+    // Navigation and logout functionality
+    const taskDashboardBtn = document.getElementById('task-dashboard-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    try{
+        showLoader();
+        taskDashboardBtn.addEventListener('click', () => {
+            window.location.href = 'taskDashboard.html';
+        });
+    }finally {
+        hideLoader();
+    }
+    try{
+        logoutBtn.addEventListener('click', () => {
+          sessionStorage.removeItem('userToken'); // Clear token
+          sessionStorage.removeItem('userName'); // Clear user info
+          alert('You have logged out.');
+          window.location.href = 'login.html';
+        });
+    
+    }finally {
+        hideLoader();
+    }
+  </script>
+</body>
+</html>
